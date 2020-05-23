@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>207873848038-1v482nrmru10ar0a85fcackf6eltd70h.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.207873848038-1v482nrmru10ar0a85fcackf6eltd70h</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB0oMh9JHUGogbUe7sEXVvYeLAiv7ZAPao</string>
+	<key>GCM_SENDER_ID</key>
+	<string>207873848038</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bertco.ToptalBlogster</string>
+	<key>PROJECT_ID</key>
+	<string>toptalblogster</string>
+	<key>STORAGE_BUCKET</key>
+	<string>toptalblogster.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:207873848038:ios:4538982e166264c329c127</string>
+	<key>DATABASE_URL</key>
+	<string>https://toptalblogster.firebaseio.com</string>
+</dict>
+</plist>
