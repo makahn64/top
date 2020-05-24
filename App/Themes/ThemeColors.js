@@ -61,8 +61,8 @@ export const ThemeColors = {
         light: Colors.lightGray,
     },
     normalText: {
-        dark: Colors.white,
-        light: Colors.black,
+        dark: Colors.grey4,
+        light: Colors.grey1,
     },
     mutedText: {
         dark: Colors.white,

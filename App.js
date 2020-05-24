@@ -7,11 +7,12 @@
  */
 
 import React from 'react';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import RootContainer from './App/Screens/RootContainer';
 import {Provider} from 'react-redux';
 import store from './App/Redux';
 import {Root} from 'native-base';
+import {StatusBar} from 'react-native';
 
 const App: () => React$Node = () => {
 
@@ -19,8 +20,8 @@ const App: () => React$Node = () => {
         <Root>
             <Provider store={store}>
                 <SafeAreaProvider>
-                    {/*<StatusBar barStyle="dark-content"/>*/}
-                    <RootContainer/>
+                    <StatusBar barStyle="dark-content"/>
+                        <RootContainer/>
                 </SafeAreaProvider>
             </Provider>
         </Root>

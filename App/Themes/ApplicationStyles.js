@@ -123,7 +123,7 @@ const getAppStyles = theme => {
         },
         normalText: {
             ...Fonts.style.normal,
-            color: theme.muted,
+            color: theme.normalText,
             marginBottom: 20,
             //marginHorizontal: Metrics.marginHorizontal,
         },

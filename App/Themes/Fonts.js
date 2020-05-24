@@ -92,7 +92,7 @@ const style = {
     },
     cellSubHead: {
         fontFamily: type.regular,
-        fontSize: size.small,
+        fontSize: size.medium,
     },
     collapsingNavHeader: {
         fontFamily: type.demibold,

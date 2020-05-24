@@ -1,5 +1,6 @@
 import moment from 'moment';
 
-const formatScreenDates = (date) => moment(date).format('MMMM Do, YYYY');
+const formatScreenDates =  published => moment(published.toDate()).format("MMMM Do YYYY");
+
 
 export default formatScreenDates;

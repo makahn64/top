@@ -13,7 +13,7 @@
 import AuthActions from '../Redux/State/AuthRedux';
 import UIActions from '../Redux/State/UIRedux';
 import XLogger from '../Services/XLogger';
-import {toggleThemeMode} from '../Services/Storage/persisted';
+import PL from '../Services/Storage/persisted';
 
 import _ from 'lodash';
 
@@ -22,7 +22,9 @@ const ToggleThemeMode = {
     title: 'Toggle Dark/Light',
     description: 'Toggles between dark and light mode',
     handler: async () => {
-        toggleThemeMode();
+        const themeMode = PL.get('themeMode');
+        XLogger.logDebug(`RCC theme mode is ${themeMode}`);
+        PL.set('themeMode', themeMode === 'dark' ? 'light' : 'dark');
     },
 };
 

@@ -8,38 +8,87 @@
 
  **********************************/
 
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Storage from '../../Services/Storage';
 import XLogger from '../XLogger';
 
 export const PERSISTED_SETTINGS = {
-    themeMode: 'light',
+    themeMode: '???',
 };
 
-export const usePersistedSettings = () => {
-    const [settings, setSettings] = useState(PERSISTED_SETTINGS);
-    useEffect(() => {
-        async function load() {
-            const themeMode = await Storage.getString('themeMode', 'light');
-            setSettings({themeMode, loadComplete: true});
-        }
+class PersistenceLayer {
+    constructor(initialValues, key = '@@persisted') {
+        this.data = initialValues;
+        Storage.getObject(key, initialValues)
+            .then(data => {
+                XLogger.logSilly('Persistence layer has fetched on boot');
+                XLogger.logSilly(data);
+                this.data = data;
+            })
+            .catch(XLogger.logError);
 
-        load();
-    });
+        this.listeners = {};
+        this.key = key;
+    }
+
+    _updateListeners(key) {
+        const listeners = this.listeners[key] || [];
+        for (let l of listeners) {
+            l({key, value: this.data[key]});
+        }
+    }
+
+    set(key, value) {
+        this.data[key] = value;
+        Storage.setObject(this.key, this.data)
+            .then(() => {
+                XLogger.logSilly(`Persisted ${key}`);
+                this._updateListeners(key);
+            })
+            .catch(err => XLogger.error(err));
+    }
+
+    get(key){
+        return this.data[key];
+    }
+
+    subscribe(key, fn) {
+        this.listeners[key] = this.listeners[key] || [];
+        this.listeners[key].push(fn);
+        return () => this._unsubscribe(key, fn);
+    }
+
+    _unsubscribe(key, fn) {
+        const listeners = this.listeners[key];
+        if (listeners && listeners.length) {
+            for (let i = listeners.length; i > 0; i--) {
+                if (listeners[i] === fn) {
+                    listeners.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+const plSingleton = new PersistenceLayer(PERSISTED_SETTINGS);
+
+export default plSingleton;
+
+export const useThemeMode = () => {
+    const [themeMode, setTM] = useState('light');
+    useEffect(() => {
+
+        return plSingleton.subscribe('themeMode', ({key, value}) => {
+            XLogger.logDebug(`useThemeMode received a theme change to ${value}`);
+            setTM(value);
+        });
+
+    }, []);
 
     const setThemeMode = mode => {
-        Storage.setString('themeMode', mode)
-            .then(() => {
-                XLogger.log(`Theme set to ${mode}`);
-                setSettings({...settings, themeMode: mode});
-            })
-            .catch(() => XLogger.logWarn('Error setting themeMode'));
+        plSingleton.set('themeMode', mode);
     };
 
-    const toggleThemeMode = state => {
-        const newMode = settings.themeMode === 'light' ? 'dark' : 'light';
-        setThemeMode(newMode);
-    };
-
-    return { settings, themeMode: settings.themeMode, setThemeMode, toggleThemeMode};
+    return {themeMode, setThemeMode};
 };

@@ -39,12 +39,19 @@ const getCellStyles = theme => StyleSheet.create({
     },
     cellSubHead: {
         ...Fonts.style.cellSubHead,
+        color: theme.normalText,
+        marginBottom: 1,
+        //marginHorizontal: Metrics.marginHorizontal,
+        textAlign: 'left',
+    },
+    cellSubMuted: {
+        ...Fonts.style.cellSubHead,
         color: theme.muted,
         marginBottom: 1,
         //marginHorizontal: Metrics.marginHorizontal,
         textAlign: 'left',
     },
-    cellAddress: {
+    cellText: {
         ...Fonts.style.cellRegular,
         color: theme.muted,
         marginBottom: 5,

@@ -15,18 +15,20 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme} from '../Themes/ThemeManager';
 import Metrics from '../Themes/Metrics';
 import XLogger from '../Services/XLogger';
-import {createStackNavigator} from '@react-navigation/stack';
 import VerySimpleView from '../Screens/ZExperimental/VerySimpleView';
 import {Icon} from 'react-native-elements';
+import AllPostsScreen from '../Screens/BlogPosts/AllPostsScreen';
+import PostStackNavigator from './PostsStackNavigator';
+import MyPostsStackNavigator from './MyPostsStackNavigator';
+import SettingsScreen from '../Screens/Settings/SettingsScreen';
 
 const RootTabs = createBottomTabNavigator();
-const RootStack = createStackNavigator();
 
 const Tabs = props => {
 
     const {theme} = useTheme();
 
-    const TAB_ICON_STYLE = focused =>  ({
+    const TAB_ICON_STYLE = focused => ({
         height: 25 * Metrics.deviceScaleFactor,
         width: 25 * Metrics.deviceScaleFactor,
         marginTop: 50 * Metrics.deviceScaleFactor,
@@ -41,10 +43,10 @@ const Tabs = props => {
             inactiveTintColor: theme.inactiveNavTint,
             labelStyle: {fontSize: 10 * Metrics.deviceScaleFactor, marginTop: 30 * Metrics.deviceScaleFactor},
         }}
-        initialRouteName={'VENUES'}>
+        initialRouteName={'POSTS'}>
         <RootTabs.Screen
             name={'POSTS'}
-            component={VerySimpleView}
+            component={PostStackNavigator}
             options={{
                 tabBarLabel: 'Posts',
                 tabBarIcon: ({focused}) => <Icon type="material-community" name="message-bulleted" color={theme.primary}
@@ -52,15 +54,16 @@ const Tabs = props => {
             }}/>
         <RootTabs.Screen
             name={'MY_POSTS'}
-            component={VerySimpleView}
+            component={MyPostsStackNavigator}
             options={{
                 tabBarLabel: 'My Posts',
-                tabBarIcon: ({focused}) => <Icon type="material-community" name="account-box-multiple" color={theme.primary}
+                tabBarIcon: ({focused}) => <Icon type="material-community" name="account-box-multiple"
+                                                 color={theme.primary}
                                                  containerStyle={TAB_ICON_STYLE(focused)}/>,
             }}/>
         <RootTabs.Screen
             name={'SETTINGS'}
-            component={VerySimpleView}
+            component={SettingsScreen}
             options={{
                 tabBarLabel: 'Settings',
                 tabBarIcon: ({focused}) => <Icon type="material-community" name="settings" color={theme.primary}
@@ -74,21 +77,14 @@ const RootNavigator = props => {
     const {theme, themeMode} = useTheme();
     XLogger.logSilly('rendering rootnav');
 
-    const options = {
-        headerShown: false,
-        headerStyle: {
-            backgroundColor: theme.surface,
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-        },
-    };
+
 
     return (
         <NavigationContainer theme={{dark: themeMode === 'dark', colors: theme}}>
-            <RootStack.Navigator screenOptions={options} initialRouteName={'main'}>
-                <RootStack.Screen name="MAINTABS" component={Tabs} options={{headerShown: false}}/>
-            </RootStack.Navigator>
+            <Tabs/>
+            {/*<RootStack.Navigator screenOptions={options} initialRouteName={'main'}>*/}
+            {/*    <RootStack.Screen name="MAINTABS" component={Tabs} options={{headerShown: false}}/>*/}
+            {/*</RootStack.Navigator>*/}
         </NavigationContainer>
     );
 };
