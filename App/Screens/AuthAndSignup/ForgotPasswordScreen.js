@@ -2,8 +2,8 @@
 
  File:       ForgotPasswordScreen.js
  Function:   WHat it says...
- Copyright:  AppDelegates LLC
- Date:       2019-12-12
+ Copyright:  Bertco LLC
+ Date:       2020-05-24
  Author:     mkahn
 
  **********************************/
@@ -20,9 +20,10 @@ import {
 } from 'react-native';
 import FullButton from '../../Components/Buttons/FullButton';
 import {validateEmail} from '../../Services/Helpers';
-import TLMFirebase from '../../Services/Firebase';
+import Firebase from '../../Services/Firebase';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useStyles} from '../../Themes/ThemeManager';
+import Metrics from '../../Themes/Metrics';
 
 const ForgotPasswordScreen = props => {
 
@@ -36,7 +37,7 @@ const ForgotPasswordScreen = props => {
 
     const requestNewPassword = async () => {
         setInProgress(true);
-        await TLMFirebase.auth.requestNewPassword(email);
+        await Firebase.auth.requestNewPassword(email);
         setRequestDone(true);
     };
 
@@ -48,7 +49,7 @@ const ForgotPasswordScreen = props => {
                 [
                     {
                         text: 'OK',
-                        onPress: () => navigation.navigate({routeName: 'LoginScreen'}),
+                        onPress: () => navigation.navigate('MAINTABS'),
                     },
                 ],
                 {cancelable: false},
@@ -62,7 +63,7 @@ const ForgotPasswordScreen = props => {
             style={{flex: 1}}
             enabled>
             <SafeAreaView style={styles.container}>
-                <View style={styles.stack}>
+                <View style={styles.insetContainer}>
                     <Text style={styles.titleText}>Reset Password</Text>
                     <Text style={styles.sectionText}>Please enter your email address and we'll send you a password reset
                         link.</Text>
@@ -75,7 +76,7 @@ const ForgotPasswordScreen = props => {
                         placeholder="email"
                         returnKeyLabel="next"
                         returnKeyType="next"
-                        style={{...styles.textInput, marginTop: 20}}
+                        style={[styles.fullWidthTextInput, { marginHorizontal: Metrics.marginHorizontal*2 }]}
                         textContentType="emailAddress"
                         editable={true}
                         value={email}/>

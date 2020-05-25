@@ -21,8 +21,8 @@ import {formatScreenDates} from '../../Services/Helpers';
 
 const PostCell = props => {
 
-    const { post, onPress } = props;
-    const { title, author, published, docId } = post;
+    const { post, onPress, showEmail } = props;
+    const { title, author, published, docId, authorEmail } = post;
     const { cellStyles: styles } = useStyles();
 
     // const stars = (avgReviews && avgReviews.overall) || 3; // everyone gets a prize
@@ -36,6 +36,7 @@ const PostCell = props => {
                 <Text style={styles.cellHeader}>{title}</Text>
                 <Text style={styles.cellSubHead}>By {author}</Text>
                 <Text style={styles.cellSubMuted}>{formattedPublishedDate}</Text>
+                { showEmail ? <Text style={styles.cellSubMuted}>{authorEmail}</Text> : null }
             </View>
         </BaseCell>
     );
@@ -43,6 +44,7 @@ const PostCell = props => {
 
 PostCell.propTypes = {
     post: PropTypes.object,
+    showEmail: PropTypes.bool,
 };
 
 export default PostCell;

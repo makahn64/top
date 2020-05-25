@@ -14,6 +14,7 @@ import AuthActions from '../Redux/State/AuthRedux';
 import UIActions from '../Redux/State/UIRedux';
 import XLogger from '../Services/XLogger';
 import PL from '../Services/Storage/persisted';
+import auth from '@react-native-firebase/auth';
 
 import _ from 'lodash';
 
@@ -33,9 +34,9 @@ const LogoutButton = {
     title: 'Logout',
     description: 'Logs the user out of Firebase',
     handler: () => {
-        const dispatch = require('../Redux').dispatch;
-        XLogger.logDebug('Signing out of Firebase via Redux');
-        dispatch(AuthActions.firebaseLogoutRequested());
+        auth()
+            .signOut()
+            .then(()=>XLogger.logDebug('Logged out thru reactotron'));
     },
 };
 

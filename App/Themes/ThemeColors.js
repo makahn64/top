@@ -16,48 +16,32 @@ export const ThemeColors = {
     // First, the colors needed by react-navigation's built in theming support
     // Primary is the "brand color"
     primary: {
-        dark: Colors.wineRed,
-        light: Colors.wineRed,
+        dark: Colors.lightBlue,
+        light: Colors.blue,
     },
     background: {
         dark: Colors.nearBlack,
         light: Colors.white,
     },
     text: {
-        dark: Colors.white,
-        light: Colors.black,
-    },
-    // MAK: for the 0.62 and conversion to new themeing methodology
-    // This is used on detail screens where there is a secondary tab bar for things like info, map, reviews, etc.
-    secondaryTabIndicatorColor: {
-        dark: Colors.sauterne,
-        light: Colors.oldWineRed,
-    },
-    secondaryTabIconColor: {
-        dark: Colors.sauterne,
-        light: Colors.oldWineRed,
-    },
-    // Also used for headers and tab bars
-    card: {
-        dark: Colors.nearBlack,
-        light: Colors.white,
+        dark: Colors.grey5,
+        light: Colors.grey0,
     },
     // Borders around headers, tab bars
     border: {
         dark: Colors.darkGray,
         light: Colors.lightGray,
     },
-    // The rest of these are for Winex-specific elements
     secondary: {
-        dark: Colors.wineRed,
-        light: Colors.wineRed,
+        dark: Colors.blue,
+        light: Colors.lightBlue,
     },
     link: {
         dark: Colors.pink,
-        light: Colors.oldWineRed,
+        light: Colors.lightBlue,
     },
     muted: {
-        dark: Colors.lightGray,
+        dark: Colors.gray,
         light: Colors.lightGray,
     },
     normalText: {
@@ -65,8 +49,12 @@ export const ThemeColors = {
         light: Colors.grey1,
     },
     mutedText: {
-        dark: Colors.white,
-        light: Colors.gray,
+        dark: Colors.grey3,
+        light: Colors.grey2,
+    },
+    ultramuted: {
+        dark: Colors.ultralightGray,
+        light: Colors.grey1,
     },
     invertedText: {
         dark: Colors.black,
@@ -78,24 +66,16 @@ export const ThemeColors = {
     },
     // These will need some renaming, I think
     activeNavTint: {
-        dark: Colors.sauterne,
-        light: Colors.oldWineRed,
+        dark: Colors.grey4,
+        light: Colors.blue,
     },
     inactiveNavTint: {
         dark: Colors.darkNavInactive,
         light: Colors.grey3,
     },
-    featureTags: {
-        dark: Colors.sauterne,
-        light: Colors.lightPurple,
-    },
     cellBorder: {
         dark: Colors.darkGray,
         light: Colors.mediumGreyBrown,
-    },
-    mapButtons: {
-        dark: Colors.greenVine,
-        light: Colors.greenVine,
     },
     backIcon: {
         dark: Colors.sauterne,
@@ -129,6 +109,10 @@ export const ThemeColors = {
         dark: Colors.white,
         light: Colors.black,
     },
+    faintBrand: {
+        dark: Colors.blue,
+        light: Colors.faintBrand
+    }
 };
 
 export const getTheme = mode => {

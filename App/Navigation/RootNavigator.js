@@ -8,7 +8,7 @@
 
  **********************************/
 
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -21,8 +21,13 @@ import AllPostsScreen from '../Screens/BlogPosts/AllPostsScreen';
 import PostStackNavigator from './PostsStackNavigator';
 import MyPostsStackNavigator from './MyPostsStackNavigator';
 import SettingsScreen from '../Screens/Settings/SettingsScreen';
+import BootScreen from '../Screens/Boot/BootScreen';
+import {createStackNavigator} from '@react-navigation/stack';
+import AuthNavigator from './AuthNavigator';
+import AuthContext from '../Hooks/AuthContext';
 
 const RootTabs = createBottomTabNavigator();
+const RootStack = createStackNavigator();
 
 const Tabs = props => {
 
@@ -75,16 +80,27 @@ const Tabs = props => {
 const RootNavigator = props => {
 
     const {theme, themeMode} = useTheme();
-    XLogger.logSilly('rendering rootnav');
+    const { isLoggedIn, firebaseCreds } = useContext(AuthContext);
+    XLogger.logSilly(`rendering rootnav loggedIn -> ${isLoggedIn}`);
 
+    const options = {
+        headerShown: false,
+        headerStyle: {
+            backgroundColor: theme.surface,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+        },
+    };
 
 
     return (
         <NavigationContainer theme={{dark: themeMode === 'dark', colors: theme}}>
-            <Tabs/>
-            {/*<RootStack.Navigator screenOptions={options} initialRouteName={'main'}>*/}
-            {/*    <RootStack.Screen name="MAINTABS" component={Tabs} options={{headerShown: false}}/>*/}
-            {/*</RootStack.Navigator>*/}
+            {/*<Tabs/>*/}
+            <RootStack.Navigator screenOptions={options} initialRouteName={'MAINTABS'}>
+                <RootStack.Screen name="MAINTABS" component={Tabs} options={{headerShown: false}}/>
+                <RootStack.Screen name="AUTH" component={AuthNavigator}/>
+            </RootStack.Navigator>
         </NavigationContainer>
     );
 };

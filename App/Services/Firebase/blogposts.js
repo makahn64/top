@@ -9,10 +9,8 @@
  **********************************/
 
 import firestore from '@react-native-firebase/firestore';
-import _ from 'lodash';
 import XLogger from '../XLogger';
 import {useState, useEffect} from 'react';
-import moment from 'moment';
 
 const db = firestore();
 const postsCollection = db.collection('posts');
@@ -40,21 +38,25 @@ const comparePublished = (a, b) => (b.published.toDate().getTime() - a.published
 
 export const useBlogPosts = () => {
     const [posts, setPosts] = useState([]);
-    useEffect(() => {
-        async function load() {
-            try {
-                const _posts = await getAllPostsAsData();
-                setPosts(_posts.sort(comparePublished));
-            } catch (e) {
-                XLogger.logDebug(`Error fetching posts! ${e.message}`);
-            }
-        }
+    const [isLoading, setIsLoading] = useState(false);
 
-        load();
+    const loadLatestPosts = async () => {
+        setIsLoading(true);
+        try {
+            const _posts = await getAllPostsAsData();
+            setPosts(_posts.sort(comparePublished));
+        } catch (e) {
+            XLogger.logDebug(`Error fetching posts! ${e.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        loadLatestPosts();
     }, []);
 
-
-    return posts;
+    return {posts, loadLatestPosts, isLoading};
 };
 
 

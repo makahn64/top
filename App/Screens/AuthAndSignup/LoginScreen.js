@@ -16,18 +16,17 @@ import {
     SafeAreaView,
     Platform,
     TouchableOpacity,
-    Linking,
     KeyboardAvoidingView, Image, ActivityIndicator,
 } from 'react-native';
 import FullButton from '../../Components/Buttons/FullButton';
 import {validateEmail} from '../../Services/Helpers';
-import SocialSignIn from './Components/SocialSignIn';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useStyles} from '../../Themes/ThemeManager';
-import {useLogin} from '../../Redux/State/AuthRedux';
 import XLogger from '../../Services/XLogger';
 import Modal from 'react-native-modal';
 import Images from '../../Themes/Images';
+import Authentication from '../../Services/Firebase/authentication';
+import {SocialIcon} from 'react-native-elements';
 
 const SHOW_ERROR_CODE = __DEV__ && true; // for debug only
 
@@ -37,17 +36,9 @@ const BAD_LOGIN_ERR_MSG = 'That seems to be the wrong password.';
 const LoginScreen = props => {
 
     const navigation = useNavigation();
-    const route = useRoute();
-    const prepopEmail = route && route.params && route.params.prepopEmail;
     const {appStyles: styles, theme, Metrics} = useStyles();
-
-    const {
-        loginErrorCode,
-        loginWithEmailAndPassword,
-        clearLoginError,
-    } = useLogin();
-
-    const [email, setEmail] = useState(prepopEmail);
+    const [ loginErrorCode, setLoginErrorCode ] = useState(null);
+    const [email, setEmail] = useState();
     const [pwd, setPwd] = useState('');
     const [showSocialButtons, setsShowSocialButtons] = useState(true);
     // Modal stuff, maybe go into it's own component
@@ -91,13 +82,33 @@ const LoginScreen = props => {
         navigation.navigate('ForgotPasswordScreen');
     };
 
-    const signInWithEmailPassword = () => {
+    const exit = () => {
+        navigation.popToTop();
+        navigation.navigate('MAINTABS');
+    }
+
+    const signInWithEmailPassword = async () => {
         XLogger.log('Sign in with Username/password pressed');
-        setTimeout(() => {
-            // This delay was here for testing, but I sort of like the effect so I am leaving it in :).
-            loginWithEmailAndPassword(email, pwd);
-        }, 1000);
         showLoginModal();
+
+        try {
+            await Authentication.signInWithEmailPassword(email, pwd);
+            exit();
+        } catch (e) {
+            XLogger.warn(e.message);
+            setLoginErrorCode(e.code);
+        }
+    };
+
+    const signInWithGoogle = async () => {
+        XLogger.log('Sign in with Google pressed');
+        try {
+            await Authentication.signInWithGoogle();
+            exit();
+        } catch (e) {
+            XLogger.warn(e.message);
+            setLoginErrorCode(e.code);
+        }
     };
 
     const handleSocialSignin = authenticator => {
@@ -112,7 +123,7 @@ const LoginScreen = props => {
 
     const tryAgain = () => {
         setShowModal(false);
-        clearLoginError();
+        setLoginErrorCode(null);
     };
 
     return (
@@ -123,30 +134,20 @@ const LoginScreen = props => {
             <SafeAreaView style={styles.container}>
                 <View style={styles.stack}>
                     <Text style={styles.titleText}>Please Sign In to Your Account</Text>
-                    <View style={{marginTop: 20}}>
-                        <Text style={{...styles.inputHelpText, color: theme.secondary}}>By signing in, you agree
-                            to our
-                            <Text style={{...styles.link, color: theme.secondary, fontWeight: 'bold'}}
-                                  onPress={() => {
-                                      Linking.openURL('https://www.thelotusmethodsf.com/terms-and-conditions');
-                                  }}>
-                                &nbsp;Terms of Use & Liability Waiver&nbsp;
-                            </Text>
-                            and
-                            <Text style={{...styles.link, color: theme.secondary, fontWeight: 'bold'}}
-                                  onPress={() => {
-                                      Linking.openURL('https://www.thelotusmethodsf.com/privacy-policy');
-                                  }}>
-                                &nbsp;Privacy Policy&nbsp;</Text>
-                        </Text>
-                    </View>
                     {showSocialButtons ?
-                        <SocialSignIn style={{marginTop: 20}} onLoginAttempt={handleSocialSignin}/> : null}
+                        <SocialIcon
+                            button
+                            raised={false}
+                            type="google"
+                            title={'Sign In With Google'.toUpperCase()}
+                            onPress={signInWithGoogle}
+                            style={{width: '90%', alignSelf: 'center', borderRadius: 10}}
+                        /> : null}
                     {showSocialButtons ? <Text style={{...styles.inputHelpText, marginTop: 10}}>-or-</Text> : null}
                     {showSocialButtons ?
                         <FullButton onPress={() => setsShowSocialButtons(false)}
                                     text="Sign In with Email"
-                                    style={{width: '90%', marginTop: 10}}/> :
+                                    style={{width: '90%', marginTop: 10, backgroundColor: 'green', color: 'white'}}/> :
                         null}
                     {!showSocialButtons ?
                         <View style={{margin: Metrics.marginHorizontal}}>
@@ -159,7 +160,7 @@ const LoginScreen = props => {
                                 placeholder="email"
                                 returnKeyLabel="next"
                                 returnKeyType="next"
-                                style={{...styles.textInput, marginTop: 20}}
+                                style={{...styles.fullWidthTextInput, marginTop: 20, }}
                                 textContentType="emailAddress"
                                 editable={true}
                                 value={email}/>
@@ -173,7 +174,7 @@ const LoginScreen = props => {
                                 placeholder="password"
                                 returnKeyLabel="done"
                                 returnKeyType="done"
-                                style={[styles.textInput, {marginTop: 20, marginBottom: 30}]}
+                                style={[styles.fullWidthTextInput, {marginTop: 20, marginBottom: 30}]}
                                 textContentType="emailAddress"
                                 editable={true}
                                 value={pwd}/>
@@ -214,24 +215,24 @@ const LoginScreen = props => {
                                 textDecorationLine: 'underline',
                                 margin: 0,
                                 fontWeight: 'bold',
-                            }}>Google or Facebook.</Text>
+                            }}>Google.</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 1}}/>
                 </View>
             </SafeAreaView>
             <Modal isVisible={showModal}>
-                <View style={{flexBasis: '40%', backgroundColor: 'white', borderRadius: 10}}>
-                    <View style={{margin: 20, justifyContent: 'space-between', height: '90%'}}>
+                <View style={{flexBasis: '60%', backgroundColor: 'white', borderRadius: 10}}>
+                    <View style={{margin: 20, justifyContent: 'space-around', height: '90%'}}>
                         <View>
-                            <Image source={Images.headerLight} style={{alignSelf: 'center'}}/>
+                            <Image source={Images.logoblue} style={{alignSelf: 'center', width: '80%', height: 100}} resizeMode={'contain'}/>
                         </View>
                         <View>
                             {showModalActivityIndicator && !loginErrorCode ?
                                 <ActivityIndicator size="large" color={theme.primary}/> : null}
                             <Text style={styles.modalBodyText}>{modalText}</Text>
                             {SHOW_ERROR_CODE ?
-                                <Text style={[styles.modalBodyText, {color: 'red', fontSize: 12 }]}>{loginErrorCode}</Text> : null}
+                                <Text style={[styles.modalBodyText, {color: 'red', fontSize: 12, opacity: 0.5 }]}>{loginErrorCode}</Text> : null}
 
                         </View>
                         <View>

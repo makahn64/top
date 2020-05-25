@@ -2,8 +2,8 @@
 
  File:       InputNameEmail.js
  Function:
- Copyright:  AppDelegates LLC
- Date:       2020-03-08
+ Copyright:  Bertco LLC
+ Date:       2020-05-25
  Author:     mkahn
 
  **********************************/
@@ -29,11 +29,11 @@ const InputNameEmail = props => {
     const {theme, appStyles: styles} = useStyles();
 
     const emailError = email && !validateEmail(email);
-    const emailInputStyle = [styles.textInput,
+    const emailInputStyle = [styles.fullWidthTextInput,
         emailError ? styles.errored : null];
 
     const passwordError = password && password.length < 8;
-    const passwordInputStyle = [styles.textInput,
+    const passwordInputStyle = [styles.fullWidthTextInput,
         passwordError ? styles.errored : null];
 
     return (
@@ -48,7 +48,7 @@ const InputNameEmail = props => {
                 placeholderTextColor={theme.placeholderColor}
                 returnKeyLabel="done"
                 returnKeyType="done"
-                style={styles.textInput}
+                style={styles.fullWidthTextInput}
                 textContentType="givenName"
                 value={firstName}/>
             <TextInput
@@ -61,7 +61,7 @@ const InputNameEmail = props => {
                 placeholderTextColor={theme.placeholderColor}
                 returnKeyLabel="done"
                 returnKeyType="done"
-                style={styles.textInput}
+                style={styles.fullWidthTextInput}
                 textContentType="givenName"
                 value={lastName}/>
             <TextInput

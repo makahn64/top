@@ -53,6 +53,8 @@ const getAppStyles = theme => {
             borderColor: theme.cellBorder,
             color: theme.normalText,
             marginBottom: Metrics.marginVertical,
+            minHeight: 50,
+            padding: 10,
         },
         baseCell: {
             width: '100%',
@@ -193,6 +195,61 @@ const getAppStyles = theme => {
             color: theme.mutedText,
             marginTop: 5, marginBottom: 10,
         },
+        outlineButton: {
+            alignSelf: 'center',
+            backgroundColor: theme.surface,
+            borderColor: theme.primary,
+            borderRadius: 10,
+            borderWidth: 2,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginVertical: 5,
+            opacity: 0.9,
+            padding: 16,
+        },
+        outlineButtonText: {
+            color: theme.primary,
+            fontFamily: Fonts.type.bold,
+            fontSize: Fonts.size.regular,
+            textAlign: 'center',
+        },
+        buttonText: {
+            color: theme.invertedText,
+            fontFamily: Fonts.type.bold,
+            fontSize: Fonts.size.regular,
+            textAlign: 'center',
+        },
+        button: {
+            alignSelf: 'center',
+            backgroundColor: theme.primary,
+            borderRadius: 10,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginVertical: 5,
+            opacity: 0.9,
+            padding: 18,
+        },
+        modalBodyText: {
+            ...Fonts.style.h3,
+            color: theme.muted,
+            alignSelf: 'center',
+            marginTop: Metrics.marginVertical * 1.5,
+            textAlign: 'center',
+        },
+        smallMutedText: {
+            ...Fonts.style.normal,
+            color: theme.muted,
+        },
+        postCountContainer: {
+            borderWidth: 1,
+            borderColor: theme.faintBrand,
+            padding: Metrics.marginVertical,
+            marginBottom: Metrics.marginVertical,
+            textAlign: 'center',
+            borderRadius: 5,
+            backgroundColor: theme.faintBrand,
+        },
+
     });
 };
 

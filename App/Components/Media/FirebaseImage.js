@@ -14,6 +14,7 @@ import {Image, View, Text} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import XLogger from '../../Services/XLogger';
 import storage from '@react-native-firebase/storage';
+import Images from '../../Themes/Images';
 
 
 // Google Cloud Storage URLs look like:
@@ -44,11 +45,16 @@ const FirebaseImage = props => {
         setLoaded(true);
     };
 
+    const handleImageError = () => {
+        setDownloadUrl(Images.placeholderBanner);
+    }
+
     return (
         <Image
             style={[style, { borderWidth: loaded ? 0 : 10, borderColor: '#e1e1e1'}]}
             source={downloadUrl}
-            onLoad={handleImageLoaded}/>
+            onLoad={handleImageLoaded}
+        onError={handleImageError}/>
     );
 };
 

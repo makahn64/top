@@ -1,9 +1,9 @@
 /*********************************
 
  File:       BootScreen.js
- Function:   Converted from TLM 1.0
- Copyright:  AppDelegates LLC
- Date:       2020-03-09
+ Function:
+ Copyright:  Bertco LLC
+ Date:       2020-05-24
  Author:     mkahn
 
  **********************************/
@@ -13,6 +13,7 @@ import {ActivityIndicator, Image, ImageBackground, StyleSheet, View} from 'react
 import XLogger from '../../Services/XLogger';
 import {useTheme} from '../../Themes/ThemeManager';
 import Images from '../../Themes/Images';
+import Metrics from '../../Themes/Metrics';
 
 const BootScreen = props => {
 
@@ -41,8 +42,9 @@ const BootScreen = props => {
             // backgroundColor: 'red'
         },
         logoImage: {
-            width: 250,
+            width: Metrics.screenWidth*0.9,
             height: 250,
+            resizeMode: 'contain',
         },
         backgroundImage: {
             ...StyleSheet.absoluteFillObject,
@@ -51,9 +53,9 @@ const BootScreen = props => {
 
     return (
         <View style={styles.fillCenterContainer}>
-            <ImageBackground source={Images.splashBackground} resizeMode="stretch" style={styles.backgroundImage}/>
+            <ImageBackground source={Images.splash} resizeMode="stretch" style={styles.backgroundImage}/>
             <View style={styles.logoView}>
-                <Image source={Images.splashTransparent} style={styles.logoImage}/>
+                <Image source={Images.logo} style={styles.logoImage}/>
             </View>
             <View style={styles.contentView}>
                 <ActivityIndicator size="large" color={'white'} animating/>
