@@ -6,25 +6,25 @@
  Date:       2020-05-23
  Author:     mkahn
 
+ This screen shares a lot with AllPostsScreen and should be refactored at some point.
+
  **********************************/
 
 import React, {useContext, useRef, useState} from 'react';
-import XLogger from '../../Services/XLogger';
 import {useNavigation} from '@react-navigation/native';
-import FilteredListView from '../../Components/Views/FilteredListView';
 import {useBlogPosts} from '../../Services/Firebase/blogposts';
 import PostCell from '../../Components/Cells/PostCell';
-import PostFilterComponent from './PostFilterComponent';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FlatList, View, Text, RefreshControl} from 'react-native';
 import {Input, Item} from 'native-base';
 import {useStyles} from '../../Themes/ThemeManager';
 import AuthContext from '../../Hooks/AuthContext';
 import Metrics from '../../Themes/Metrics';
-import FullButton from '../../Components/Buttons/FullButton';
+import {Button} from 'react-native-elements';
 import postFilter from '../../Services/Filter/post-filter';
-import * as Animatable from 'react-native-animatable';
 import {Icon} from 'react-native-elements';
+import useFocusChangeCallbacks from '../../Hooks/useFocusChangeCallbacks';
+import NoPosts from './Components/NoPosts';
 
 const MyPostsScreen = props => {
 
@@ -35,7 +35,8 @@ const MyPostsScreen = props => {
     const insets = useSafeAreaInsets();
     const {isLoggedIn, firebaseCreds} = useContext(AuthContext);
     const fab = useRef(null);
-    const [showFab, setShowFab] = useState(false);
+    useFocusChangeCallbacks({onFocus: loadLatestPosts});
+
 
     const handleSearchChanged = t => {
         setSearch(t);
@@ -49,7 +50,10 @@ const MyPostsScreen = props => {
     // const filteredVenues = venues.filter(venueSearch);
 
     const renderCell = ({item}) => (<PostCell post={item} width={64} height={64}
-                                              onPress={() => navigation.push('POST', {docId: item.docId})}
+                                              onPress={() => navigation.push('MYPOST', {
+                                                  docId: item.docId,
+                                                  showControls: true,
+                                              })}
                                               showEmail={false}/>);
 
     if (!isLoggedIn) {
@@ -67,7 +71,7 @@ const MyPostsScreen = props => {
                         must be logged in to post or manage your past posts.</Text>
                 </View>
                 <View style={{padding: Metrics.marginHorizontal * 2}}>
-                    <FullButton onPress={handleLogin} text={'Log In'} fullWidth/>
+                    <Button onPress={handleLogin} title={'Log In'}/>
                 </View>
             </View>);
     }
@@ -78,42 +82,44 @@ const MyPostsScreen = props => {
     const postSearch = post => postFilter(post, search);
     const filteredPosts = usersPosts.filter(postSearch);
 
+    const hasContent = usersPosts && usersPosts.length;
+
     return (
         <View style={[styles.insetContainer, {paddingTop: insets.top * 1.25, height: '100%'}]}>
-            <Text style={styles.H2}>Posts by {firebaseCreds.displayName}</Text>
-            <Item style={{borderBottomColor: 'transparent'}}>
-                <Input placeholder="Search"
-                       onChangeText={handleSearchChanged}
-                       value={search}
-                       style={styles.fullWidthTextInput}/>
-            </Item>
-            {filteredPosts && filteredPosts.length ?
+            <Text style={styles.sectionText}>Posts by {firebaseCreds.displayName}</Text>
+            {hasContent ?
                 <View>
-                    <Text style={styles.postCountContainer}>Number of posts: {filteredPosts.length}</Text>
-                    <FlatList data={filteredPosts}
-                              renderItem={renderCell}
-                              keyExtractor={p => p.docId}
-                              refreshControl={
-                                  <RefreshControl
-                                      refreshing={isLoading}
-                                      onRefresh={loadLatestPosts}
-                                  />}
-                    />
-                </View> : <View>
-                    <Text style={[styles.sectionText, {marginTop: Metrics.marginVertical * 3}]}>There are no posts in
-                        the database.</Text>
-                    <FullButton onPress={loadLatestPosts} text={'Reload'} outline/>
-                </View>}
+                    <Item style={{borderBottomColor: 'transparent'}}>
+                        <Input placeholder="Search"
+                               onChangeText={handleSearchChanged}
+                               value={search}
+                               style={styles.fullWidthTextInput}/>
+                    </Item>
+                    <View>
+                        <Text style={styles.postCountContainer}>Number of posts: {filteredPosts.length}</Text>
+                        <FlatList data={filteredPosts}
+                                  renderItem={renderCell}
+                                  keyExtractor={p => `${p.docId}-${p.image}`}
+                                  refreshControl={
+                                      <RefreshControl
+                                          refreshing={isLoading}
+                                          onRefresh={loadLatestPosts}
+                                      />}
+                        />
+                    </View>
+                </View> : <NoPosts onReload={loadLatestPosts} byYou={true}/>}
             <View style={{position: 'absolute', bottom: 10, right: 10}}
-                             delay={500}
-                             ref={fab}>
+                  delay={500}
+                  ref={fab}>
                 <Icon
                     reverse
                     name={'pen'}
                     type={'material-community'}
                     color={theme.fab}
                     raised
-                    onPress={() => {}}
+                    onPress={() => {
+                        navigation.push('EDITPOST', {docId: 'new'});
+                    }}
                 />
             </View>
         </View>);

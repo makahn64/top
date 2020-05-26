@@ -28,13 +28,14 @@ const FirebaseImage = props => {
     const [loaded, setLoaded] = useState(false);
     const [downloadUrl, setDownloadUrl ] = useState(null);
 
+    // todo: the cache policy is sub-optimal. I would only force a reload if an existing post was edited.
     useEffect(()=>{
         async function load() {
-            const filename = `${mediaId}.jpg`;
+            const filename = `${mediaId}`;
             const uri = await storage()
                 .ref(filename)
                 .getDownloadURL();
-            setDownloadUrl({ uri });
+            setDownloadUrl({ uri, cache:'reload' });
         }
 
         load();

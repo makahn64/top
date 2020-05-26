@@ -12,11 +12,9 @@ import React, {useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import VerySimpleView from '../Screens/ZExperimental/VerySimpleView';
 import {useTheme} from '../Themes/ThemeManager';
-import {exp} from 'react-native-reanimated';
-import AllPostsScreen from '../Screens/BlogPosts/AllPostsScreen';
-import PostCell from '../Components/Cells/PostCell';
 import PostDetailScreen from '../Screens/BlogPosts/PostDetailScreen';
 import MyPostsScreen from '../Screens/BlogPosts/MyPostsScreen';
+import EditPostScreen from '../Screens/BlogPosts/EditPostScreen';
 
 
 const Stack = createStackNavigator();
@@ -38,7 +36,8 @@ const MyPostsStackNavigator = props => {
     return (
         <Stack.Navigator screenOptions={options} initialRouteName={'MY POSTS'}>
             <Stack.Screen name="MY POSTS" component={MyPostsScreen} options={{headerShown: false}}/>
-            {/*<Stack.Screen name="POST" component={PostDetailScreen} options={{headerShown: true}}/>*/}
+            <Stack.Screen name="MYPOST" component={PostDetailScreen} options={{headerShown: true}}/>
+            <Stack.Screen name={'EDITPOST'} component={EditPostScreen} options={{headerShown: true}}/>
         </Stack.Navigator>
     );
 

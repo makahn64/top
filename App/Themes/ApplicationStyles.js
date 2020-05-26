@@ -115,6 +115,13 @@ const getAppStyles = theme => {
             marginHorizontal: Metrics.marginHorizontal,
             textAlign: 'center',
         },
+        mutedCenteredText: {
+            ...Fonts.style.h4,
+            color: theme.muted,
+            marginBottom: 30,
+            marginHorizontal: Metrics.marginHorizontal,
+            textAlign: 'center',
+        },
         heading: {
             ...Fonts.style.h3,
             color: theme.muted,

@@ -18,7 +18,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView, Image, ActivityIndicator,
 } from 'react-native';
-import FullButton from '../../Components/Buttons/FullButton';
+import {Button} from 'react-native-elements';
 import {validateEmail} from '../../Services/Helpers';
 import {useNavigation} from '@react-navigation/native';
 import {useStyles} from '../../Themes/ThemeManager';
@@ -27,6 +27,7 @@ import Modal from 'react-native-modal';
 import Images from '../../Themes/Images';
 import Authentication from '../../Services/Firebase/authentication';
 import {SocialIcon} from 'react-native-elements';
+import FullButton from '../../Components/Buttons/FullButton';
 
 const SHOW_ERROR_CODE = __DEV__ && true; // for debug only
 
@@ -147,7 +148,7 @@ const LoginScreen = props => {
                     {showSocialButtons ?
                         <FullButton onPress={() => setsShowSocialButtons(false)}
                                     text="Sign In with Email"
-                                    style={{width: '90%', marginTop: 10, backgroundColor: 'green', color: 'white'}}/> :
+                                    style={{width: '90%', marginTop: 10}}/> :
                         null}
                     {!showSocialButtons ?
                         <View style={{margin: Metrics.marginHorizontal}}>
@@ -178,9 +179,9 @@ const LoginScreen = props => {
                                 textContentType="emailAddress"
                                 editable={true}
                                 value={pwd}/>
-                            <FullButton disabled={!validateEmail(email) || pwd.length < 8}
+                            <Button disabled={!validateEmail(email) || pwd.length < 8}
                                         onPress={signInWithEmailPassword}
-                                        text="Sign In"
+                                        title="Sign In"
                                         fullWidth/>
                             <TouchableOpacity onPress={goToForgotPassword}
                                               style={{marginTop: 0, marginBottom: 10}}>
@@ -237,7 +238,7 @@ const LoginScreen = props => {
                         </View>
                         <View>
                             {loginErrorCode ?
-                                <FullButton onPress={tryAgain} text="OK" fullWidth/> : null}
+                                <Button onPress={tryAgain} text="OK"/> : null}
                         </View>
                     </View>
                 </View>

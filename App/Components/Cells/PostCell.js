@@ -21,8 +21,8 @@ import {formatScreenDates} from '../../Services/Helpers';
 
 const PostCell = props => {
 
-    const { post, onPress, showEmail } = props;
-    const { title, author, published, docId, authorEmail } = post;
+    const { post, onPress, showEmail, showDocId } = props;
+    const { title, author, published, docId, authorEmail, image } = post;
     const { cellStyles: styles } = useStyles();
 
     // const stars = (avgReviews && avgReviews.overall) || 3; // everyone gets a prize
@@ -31,12 +31,13 @@ const PostCell = props => {
 
     return (
         <BaseCell onPress={onPress}>
-            <FirebaseImage mediaId={docId} style={{ width: 64, height: 64 }}/>
+            <FirebaseImage mediaId={image} style={{ width: 64, height: 64 }}/>
             <View style={{ flexDirection: 'column', marginLeft: 15, width: '100%' }}>
                 <Text style={styles.cellHeader}>{title}</Text>
                 <Text style={styles.cellSubHead}>By {author}</Text>
                 <Text style={styles.cellSubMuted}>{formattedPublishedDate}</Text>
                 { showEmail ? <Text style={styles.cellSubMuted}>{authorEmail}</Text> : null }
+                { showDocId ? <Text style={styles.cellSubMuted}>{docId}</Text> : null }
             </View>
         </BaseCell>
     );
@@ -45,6 +46,7 @@ const PostCell = props => {
 PostCell.propTypes = {
     post: PropTypes.object,
     showEmail: PropTypes.bool,
+    showDocId: PropTypes.bool
 };
 
 export default PostCell;

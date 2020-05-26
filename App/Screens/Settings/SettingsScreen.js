@@ -13,12 +13,14 @@ import {View, Text} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useStyles} from '../../Themes/ThemeManager';
 import AuthContext from '../../Hooks/AuthContext';
-import FullButton from '../../Components/Buttons/FullButton';
 import Metrics from '../../Themes/Metrics';
 import UserAvatar from 'react-native-user-avatar';
 import auth from '@react-native-firebase/auth';
 import SwitchRow from '../../Components/Switches/SwitchRow';
 import {useThemeMode} from '../../Services/Storage/persisted';
+import {Button} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/core';
+import { Toast} from 'native-base';
 
 const SettingsScreen = props => {
 
@@ -26,14 +28,21 @@ const SettingsScreen = props => {
     const {appStyles: styles, theme} = useStyles();
     const {isLoggedIn, firebaseCreds} = useContext(AuthContext);
     const {themeMode, setThemeMode} = useThemeMode();
+    const navigation = useNavigation();
 
     const handleLogout = async () => {
-        await auth().signOut();
+        try {
+            await auth().signOut();
+            Toast.show({text: 'See u later!', type: 'success'});
+            navigation.navigate('POSTS');
+        } catch (e){
+            Toast.show({text: 'There was an error logging out', type: 'danger'});
+        }
     };
 
     return (
         <View style={[styles.insetContainer, {paddingTop: insets.top * 1.5}]}>
-            <Text style={[styles.H2, {alignSelf: 'center', marginBottom: Metrics.marginVertical * 10}]}>Settings</Text>
+            <Text style={[styles.sectionText, {marginBottom: Metrics.marginVertical * 10}]}>Settings</Text>
             <SwitchRow label={'Dark Mode'}
                        value={themeMode === 'dark'}
                        onValueChange={v => setThemeMode(v ? 'dark' : 'light')}/>
@@ -44,7 +53,8 @@ const SettingsScreen = props => {
                 <Text style={[styles.H4, {color: theme.primary, marginBottom: 5, textAlign: 'center'}]}>
                     {firebaseCreds.email}
                 </Text>
-                <FullButton text={'LOGOUT'} onPress={handleLogout} style={{width: '50%'}}/></View> : null}
+                <Button title={'LOGOUT'} onPress={handleLogout} style={{width: '50%', alignSelf:'center'}}/></View> : null}
+
         </View>
     );
 };

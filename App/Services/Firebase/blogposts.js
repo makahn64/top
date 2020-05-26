@@ -32,6 +32,26 @@ export const getPost = async postId => {
     return snapshot.data();
 };
 
+export const savePost = async (post, docId) => {
+
+    if (docId && docId !== 'new') {
+        await postsCollection
+            .doc(docId)
+            .set(post);
+        return docId;
+    } else {
+        // New post
+        const doc = await postsCollection
+            .add(post);
+        return doc.id;
+    }
+
+};
+
+export const deletePost = async postId => {
+    await postsCollection.doc(postId).delete();
+};
+
 export default {getAllPostsAsData};
 
 const comparePublished = (a, b) => (b.published.toDate().getTime() - a.published.toDate().getTime());
@@ -50,7 +70,7 @@ export const useBlogPosts = () => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         loadLatestPosts();

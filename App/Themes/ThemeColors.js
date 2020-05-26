@@ -41,7 +41,7 @@ export const ThemeColors = {
         light: Colors.lightBlue,
     },
     muted: {
-        dark: Colors.gray,
+        dark: Colors.grey4,
         light: Colors.lightGray,
     },
     normalText: {
@@ -49,7 +49,7 @@ export const ThemeColors = {
         light: Colors.grey1,
     },
     mutedText: {
-        dark: Colors.grey3,
+        dark: Colors.grey4,
         light: Colors.grey2,
     },
     ultramuted: {
@@ -90,7 +90,7 @@ export const ThemeColors = {
         light: Colors.white,
     },
     fab: {
-        dark: Colors.sauterne,
+        dark: Colors.rose,
         light: Colors.rose,
     },
     faint: {
@@ -111,7 +111,15 @@ export const ThemeColors = {
     },
     faintBrand: {
         dark: Colors.blue,
-        light: Colors.faintBrand
+        light: Colors.faintBrand,
+    },
+    danger: {
+        dark: Colors.red,
+        light: Colors.red,
+    },
+    success: {
+        dark: Colors.green,
+        light: Colors.green,
     }
 };
 
