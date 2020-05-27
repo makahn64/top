@@ -9,7 +9,7 @@
  **********************************/
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, Share} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/core';
 import {getPost, deletePost} from '../../Services/Firebase/blogposts';
 import FirebaseImage from '../../Components/Media/FirebaseImage';
@@ -19,7 +19,7 @@ import {formatScreenDates} from '../../Services/Helpers';
 import {Button} from 'react-native-elements';
 import OKCancelModal from '../../Components/Modals/OKCancelModal';
 import XLogger from '../../Services/XLogger';
-import {Toast} from "native-base";
+import {Toast} from 'native-base';
 
 const EDIT_ICON = {
     name: 'pen',
@@ -29,6 +29,7 @@ const EDIT_ICON = {
 };
 
 const DEL_ICON = {...EDIT_ICON, name: 'trash-can'};
+
 
 const PostDetailScreen = props => {
 
@@ -48,6 +49,40 @@ const PostDetailScreen = props => {
 
         load();
     }, []);
+
+    const headerOptions = {
+        headerTitle: null,
+        headerRight: () => (
+            <Button
+                onPress={handleShare}
+                color={theme.primary}
+                type={'clear'}
+                titleStyle={{fontSize: 12, color: theme.danger, marginRight: Metrics.marginHorizontal}}
+                icon={{
+                    name: 'share',
+                    type: 'material-community',
+                    size: 24,
+                    color: theme.primary,
+                }}
+            />
+        ),
+    };
+
+    navigation.setOptions(headerOptions);
+
+
+    const handleShare = async () => {
+        try {
+            const result = Share.share({
+                message: `Check out this post from Toptal Blogster tlb://post/${docId}`,
+            });
+            if (result.action === Share.sharedAction) {
+                Toast.show({text: 'Post shared!', type: 'success'});
+            }
+        } catch (e) {
+            Toast.show({text: 'Error sharing post!', type: 'error'});
+        }
+    };
 
     const handleEdit = () => {
         navigation.push('EDITPOST', {docId});
@@ -72,7 +107,7 @@ const PostDetailScreen = props => {
                     {showControls ? <View style={{flexDirection: 'row', marginBottom: Metrics.marginVertical}}>
                         <Button onPress={handleEdit} containerStyle={{flex: 1, margin: 2}}
                                 icon={EDIT_ICON}/>
-                        <Button onPress={()=>setShowDeleteModal(true)} containerStyle={{flex: 1, margin: 2}}
+                        <Button onPress={() => setShowDeleteModal(true)} containerStyle={{flex: 1, margin: 2}}
                                 buttonStyle={{backgroundColor: theme.danger}}
                                 icon={DEL_ICON}/>
                     </View> : null}
