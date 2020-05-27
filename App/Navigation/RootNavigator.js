@@ -52,10 +52,10 @@ const Tabs = props => {
     const {theme} = useTheme();
 
     const TAB_ICON_STYLE = focused => ({
-        height: 25 * Metrics.deviceScaleFactor,
-        width: 25 * Metrics.deviceScaleFactor,
+        height: 40 * Metrics.deviceScaleFactor,
+        width: 40 * Metrics.deviceScaleFactor,
         marginTop: 50 * Metrics.deviceScaleFactor,
-        marginBottom: 10 * Metrics.deviceScaleFactor,
+        marginBottom: 5 * Metrics.deviceScaleFactor,
         //tintColor: focused ? null : '#ff0000',
         opacity: focused ? 1.0 : 0.5,
     });
@@ -64,7 +64,7 @@ const Tabs = props => {
         tabBarOptions={{
             activeTintColor: theme.activeNavTint,
             inactiveTintColor: theme.inactiveNavTint,
-            labelStyle: {fontSize: 10 * Metrics.deviceScaleFactor, marginTop: 30 * Metrics.deviceScaleFactor},
+            labelStyle: {fontSize: 10 * Metrics.deviceScaleFactor, marginTop: 20 * Metrics.deviceScaleFactor, marginBottom: 5},
         }}
         initialRouteName={'POSTS'}>
         <RootTabs.Screen
