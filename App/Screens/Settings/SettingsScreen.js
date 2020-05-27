@@ -21,6 +21,7 @@ import {useThemeMode} from '../../Services/Storage/persisted';
 import {Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/core';
 import { Toast} from 'native-base';
+import FeaturesConfig from '../../Config/FeaturesConfig';
 
 const SettingsScreen = props => {
 
@@ -40,20 +41,30 @@ const SettingsScreen = props => {
         }
     };
 
+    const handleLogin = () => {
+        navigation.navigate('AUTH');
+    }
+
     return (
         <View style={[styles.insetContainer, {paddingTop: insets.top * 1.5}]}>
             <Text style={[styles.sectionText, {marginBottom: Metrics.marginVertical * 10}]}>Settings</Text>
-            <SwitchRow label={'Dark Mode'}
+            { FeaturesConfig.enableDarkMode ? <SwitchRow label={'Dark Mode'}
                        value={themeMode === 'dark'}
-                       onValueChange={v => setThemeMode(v ? 'dark' : 'light')}/>
+                       onValueChange={v => setThemeMode(v ? 'dark' : 'light')}/> : null }
             {isLoggedIn ? <View>
                 <View style={{alignSelf: 'center', margin: 10}}>
                     <UserAvatar name={firebaseCreds.displayName} src={firebaseCreds.photoURL} size={50}/>
                 </View>
-                <Text style={[styles.H4, {color: theme.primary, marginBottom: 5, textAlign: 'center'}]}>
+                <Text style={[styles.H4, {color: theme.primary, marginBottom: 15, textAlign: 'center'}]}>
                     {firebaseCreds.email}
                 </Text>
-                <Button title={'LOGOUT'} onPress={handleLogout} style={{width: '50%', alignSelf:'center'}}/></View> : null}
+                <Button title={'LOGOUT'} onPress={handleLogout} style={{width: '50%', alignSelf:'center'}}/></View> :
+            <View>
+                <Text style={[styles.H4, {color: theme.primary, marginBottom: 15, textAlign: 'center'}]}>
+                    You're not logged in. Log in or join to crate posts.
+                </Text>
+                <Button title={'LOGIN'} onPress={handleLogin} style={{width: '50%', alignSelf:'center'}}/>
+            </View>}
 
         </View>
     );

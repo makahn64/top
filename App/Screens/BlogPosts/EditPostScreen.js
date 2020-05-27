@@ -11,7 +11,7 @@
 
 import React, {useState, useEffect, useReducer, useContext} from 'react';
 import {View, Text, ScrollView, TextInput, ActivityIndicator} from 'react-native';
-import {useStyles} from '../../Themes/ThemeManager';
+import {useStyles, useTheme} from '../../Themes/ThemeManager';
 import ImageAddEdit from '../../Components/Media/ImageAddEdit';
 import {useNavigation, useRoute} from '@react-navigation/core';
 import Metrics from '../../Themes/Metrics';
@@ -65,9 +65,9 @@ const postReducer = (state, {payload, type}) => {
 const EditPostScreen = props => {
 
     const {appStyles: styles} = useStyles();
+    const { theme } = useTheme();
     const [state, dispatch] = useReducer(postReducer, INITIAL_EDIT_STATE);
-    const {firebaseCreds} = useContext(AuthContext);
-    const {email, displayName} = firebaseCreds;
+    const {firebaseCreds, isLoggedIn} = useContext(AuthContext);
     const navigation = useNavigation();
     const route = useRoute();
     const docId = route && route.params && route.params.docId;
@@ -94,6 +94,7 @@ const EditPostScreen = props => {
             }
         }, [docId],
     );
+
 
     const handleSave = async () => {
         XLogger.logDebug('should save');
@@ -141,17 +142,26 @@ const EditPostScreen = props => {
 
     const isValid = (title.length > 1) && (body.length > 5);
 
+    if (!isLoggedIn){
+        // situation where editing and logout
+        navigation.popToTop();
+        return null;
+    }
+
     if (!isLoaded) {
         return (
             <Loading message="Loading Post"/>
         );
     }
 
+    const {email, displayName} = firebaseCreds;
+
+
     return (
         <View>
             <ScrollView>
                 <ImageAddEdit onImageChange={handleImageChange} imageName={image}/>
-                <View style={styles.insetContainer}>
+                <View style={[styles.insetContainer, {backgroundColor: theme.background}]}>
                     <TextInput
                         autoCapitalize="words"
                         autoComplete="none"
@@ -161,9 +171,10 @@ const EditPostScreen = props => {
                         placeholder="Title"
                         returnKeyLabel="next"
                         returnKeyType="next"
-                        style={{...styles.fullWidthTextInput, marginTop: Metrics.marginVertical}}
+                        style={{...styles.fullWidthTextInput, marginTop: Metrics.marginVertical, color: theme.text}}
                         editable={true}
-                        value={title}/>
+                        value={title}
+                        placeholderTextColor={theme.muted}/>
                     <TextInput
                         autoCapitalize="sentences"
                         autoComplete="none"
@@ -173,11 +184,12 @@ const EditPostScreen = props => {
                         placeholder="Post Text"
                         returnKeyLabel="next"
                         returnKeyType="next"
-                        style={{...styles.fullWidthTextInput, marginTop: Metrics.marginVertical, minHeight: 300}}
+                        style={{...styles.fullWidthTextInput, marginTop: Metrics.marginVertical, minHeight: 300, color: theme.text}}
                         editable={true}
                         value={body}
                         multiline={true}
-                        numberOfLines={20}/>
+                        numberOfLines={20}
+                        placeholderTextColor={theme.muted}/>
                     <Button title="SAVE" onPress={handleSave} disabled={!isValid}
                             style={{marginTop: Metrics.marginVertical}}/>
                 </View>

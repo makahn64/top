@@ -21,7 +21,7 @@ import XLogger from '../Services/XLogger';
 export const useTheme = () => {
     // TODO implement theming in Firestore, if time
     const {themeMode} = useThemeMode();
-    //XLogger.log(`useTheme: ${themeMode}`);
+    XLogger.log(`useTheme: ${themeMode}`);
     const theme = getTheme(themeMode);
     return {themeMode, theme, isDark: themeMode === 'dark'};
 };

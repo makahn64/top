@@ -85,7 +85,7 @@ const LoginScreen = props => {
 
     const exit = () => {
         navigation.popToTop();
-        navigation.navigate('MAINTABS');
+        navigation.navigate('MAINTABS', { screen: 'POSTS'});
     }
 
     const signInWithEmailPassword = async () => {

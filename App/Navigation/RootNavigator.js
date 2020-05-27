@@ -70,7 +70,7 @@ const Tabs = props => {
             name={'SETTINGS'}
             component={SettingsScreen}
             options={{
-                tabBarLabel: 'Settings',
+                tabBarLabel: 'Account',
                 tabBarIcon: ({focused}) => <Icon type="material-community" name="settings" color={theme.primary}
                                                  containerStyle={TAB_ICON_STYLE(focused)}/>,
             }}/>
