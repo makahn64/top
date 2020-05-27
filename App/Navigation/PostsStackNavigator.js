@@ -32,12 +32,14 @@ const PostStackNavigator = props => {
             shadowOpacity: 0,
             borderBottomWidth: 0,
         },
+        headerBackTitle: null
+
     };
 
     return (
         <Stack.Navigator screenOptions={options} initialRouteName={'LIST'}>
             <Stack.Screen name="LIST" component={AllPostsScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="POST" component={PostDetailScreen} options={{headerShown: true}}/>
+            <Stack.Screen name="POST" component={PostDetailScreen} options={{headerShown: true, headerTitle: ''}}/>
         </Stack.Navigator>
     );
 
