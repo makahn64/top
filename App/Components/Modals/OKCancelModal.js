@@ -19,7 +19,10 @@ import Metrics from '../../Themes/Metrics';
 
 const OKCancelModal = props => {
 
-    const {showModal, onOK, onCancel, message, okButtonText, cancelButtonText, okButtonColor, cancelButtonColor} = props;
+    const {
+        showModal, onOK, onCancel, message, okButtonText, cancelButtonText,
+        okButtonColor, cancelButtonColor, hideCancel,
+    } = props;
     const {appStyles: styles, theme} = useStyles();
 
     return (
@@ -32,8 +35,10 @@ const OKCancelModal = props => {
                     <View style={{flexDirection: 'row'}}>
                         <Button title={okButtonText} buttonStyle={{backgroundColor: okButtonColor}} onPress={onOK}
                                 containerStyle={{flex: 1, margin: Metrics.marginHorizontal}}/>
-                        <Button title={cancelButtonText} buttonStyle={{backgroundColor: cancelButtonColor}} onPress={onCancel}
-                                containerStyle={{flex: 1, margin: Metrics.marginHorizontal}}/>
+                        {!hideCancel ?
+                            <Button title={cancelButtonText} buttonStyle={{backgroundColor: cancelButtonColor}}
+                                    onPress={onCancel}
+                                    containerStyle={{flex: 1, margin: Metrics.marginHorizontal}}/> : null}
                     </View>
                 </View>
             </View>
@@ -43,13 +48,14 @@ const OKCancelModal = props => {
 
 OKCancelModal.propTypes = {
     showModal: PropTypes.bool,
-    onCancel: PropTypes.func.isRequired,
+    onCancel: PropTypes.func,
     onOK: PropTypes.func.isRequired,
     message: PropTypes.string,
     okButtonText: PropTypes.string,
     cancelButtonText: PropTypes.string,
     okButtonColor: PropTypes.string,
     cancelButtonColor: PropTypes.string,
+    hideCancel: PropTypes.bool,
 };
 
 OKCancelModal.defaultProps = {
@@ -57,7 +63,8 @@ OKCancelModal.defaultProps = {
     cancelButtonText: 'CANCEL',
     okButtonColor: 'green',
     cancelButtonColor: 'red',
-}
+    onCancel: () => {},
+};
 
 export default OKCancelModal;
 

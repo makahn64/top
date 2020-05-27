@@ -15,18 +15,14 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import XLogger from '../../Services/XLogger';
 import storage from '@react-native-firebase/storage';
 import Images from '../../Themes/Images';
-
-
-// Google Cloud Storage URLs look like:
-// https://storage.cloud.google.com/toptalblogster.appspot.com/3hPXYWYntF42OIFvi71I.jpg
-
-const GBUCKET_BASE_URL = 'https://storage.cloud.google.com/toptalblogster.appspot.com/';
+import {useTheme} from '../../Themes/ThemeManager';
 
 const FirebaseImage = props => {
 
     const {mediaId, loadingSrc, style, fallback, ...imgProps} = props;
     const [loaded, setLoaded] = useState(false);
     const [downloadUrl, setDownloadUrl ] = useState(null);
+    const { theme } = useTheme();
 
     // todo: the cache policy is sub-optimal. I would only force a reload if an existing post was edited.
     useEffect(()=>{
@@ -48,15 +44,26 @@ const FirebaseImage = props => {
 
     const handleImageError = () => {
         setDownloadUrl(Images.placeholderBanner);
-    }
+    };
+
+    const loadingImageStyle = loaded ? null : { borderWidth: 5, borderColor: 'red'};
 
     return (
-        <Image
-            style={[style, { borderWidth: loaded ? 0 : 2, borderColor: '#e1e1e1'}]}
-            source={downloadUrl}
-            onLoad={handleImageLoaded}
-            loadingIndicatorSource={Images.thumplaceholder}
-        onError={handleImageError}/>
+        <View style={style}>
+            <Image
+                style={[style, loadingImageStyle, { position: 'absolute', top: 0, right: 0}]}
+                source={downloadUrl}
+                onLoad={handleImageLoaded}
+                loadingIndicatorSource={Images.thumplaceholder}
+                onError={handleImageError}/>
+            { !loaded ? <View style={{ position: 'absolute', top: 0, left: 0}}>
+                    <SkeletonPlaceholder backgroundColor={theme.skeletonBackground} highlightColor={theme.skeletonHighlight}>
+                        <View style={style}/>
+                    </SkeletonPlaceholder>
+                </View> : null }
+
+        </View>
+
     );
 };
 

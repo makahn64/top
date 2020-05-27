@@ -8,7 +8,7 @@
 
  **********************************/
 
-import React, {useState, useEffect} from 'react';
+import React, {useReducer, useEffect} from 'react';
 import {View, Text, ScrollView, Share} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/core';
 import {getPost, deletePost} from '../../Services/Firebase/blogposts';
@@ -32,6 +32,30 @@ const EDIT_ICON = {
 
 const DEL_ICON = {...EDIT_ICON, name: 'trash-can'};
 
+const INITIAL_STATE = {
+    post: null,
+    loading: true,
+    loadError: null,
+    showDeleteModal: false,
+};
+
+const reducer = (state, {type, payload}) => {
+    switch (type) {
+        case 'LOADING':
+            return {...INITIAL_STATE, loading: true};
+        case 'LOAD_COMPLETE':
+            return {...state, loading: false, post: payload};
+        case 'LOAD_FAILED':
+            return {...state, loading: false, post: null, loadError: payload};
+        case 'SHOW_DELETE_MODAL':
+            return {...state, showDeleteModal: payload};
+        case 'SHOW_BADLINK_MODAL':
+            return {...state, showBadLinkModal: payload};
+        default:
+            return state;
+    }
+};
+
 
 const PostDetailScreen = props => {
 
@@ -39,18 +63,31 @@ const PostDetailScreen = props => {
     const {appStyles: styles, theme} = useStyles();
     const docId = route && route.params && route.params.docId;
     const showControls = route && route.params && route.params.showControls;
-    const [post, setPost] = useState(null);
+    const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
     const navigation = useNavigation();
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const {post, loading, loadError, showDeleteModal} = state;
+
+    XLogger.log(`DocId is ${docId}`);
 
     useEffect(() => {
         async function load() {
-            const p = await getPost(docId);
-            setPost(p);
+            try {
+                dispatch({type: 'LOADING'});
+                const p = await getPost(docId);
+                if (p) {
+                    dispatch({type: 'LOAD_COMPLETE', payload: p});
+                } else {
+                    dispatch({type: 'LOAD_FAILED', payload: 'No such post'});
+                }
+            } catch (e) {
+                dispatch({type: 'LOAD_FAILED', payload: e});
+            }
         }
-
-        load();
-    }, []);
+        if (docId){
+            load();
+        }
+    }, [docId]);
 
     const headerOptions = {
         headerTitle: null,
@@ -98,39 +135,53 @@ const PostDetailScreen = props => {
         } catch (e) {
             Toast.show({text: 'Error: post could not be deleted!', type: 'error'});
             navigation.popToTop();
+        } finally {
+            dispatch({type: 'SHOW_DELETE_MODAL', payload: false});
         }
     };
 
-    return (
-        <ListSkeleton/>
-    )
+    if (loading || loadError) {
+        return (
+            <View>
+                <PostSkeleton/>
+                <OKCancelModal onOK={() => navigation.goBack()}
+                               showModal={loadError}
+                               okButtonColor={theme.primary}
+                               message={'There was a problem loading that post. It may have been deleted. Sorry!'}
+                               hideCancel={true}
+                               okButtonText={'OK'}/>
+            </View>);
+    }
 
-    // return (
-    //     <View>
-    //         {post ? <ScrollView>
-    //             <FirebaseImage mediaId={post.image} style={{width: Metrics.screenWidth, height: 200}}/>
-    //             <View style={styles.insetContainer}>
-    //                 {showControls ? <View style={{flexDirection: 'row', marginBottom: Metrics.marginVertical}}>
-    //                     <Button onPress={handleEdit} containerStyle={{flex: 1, margin: 2}}
-    //                             icon={EDIT_ICON}/>
-    //                     <Button onPress={() => setShowDeleteModal(true)} containerStyle={{flex: 1, margin: 2}}
-    //                             buttonStyle={{backgroundColor: theme.danger}}
-    //                             icon={DEL_ICON}/>
-    //                 </View> : null}
-    //                 <Text style={styles.H1}>{post.title}</Text>
-    //                 <Text style={styles.H3}>By {post.author}</Text>
-    //                 <Text style={[styles.H5, {color: theme.muted}]}>{formatScreenDates(post.published)}</Text>
-    //                 <Text style={[styles.normalText, {marginTop: Metrics.marginVertical * 2}]}>{post.body}</Text>
-    //             </View>
-    //         </ScrollView> : <Text>Loading...</Text>}
-    //         <OKCancelModal onCancel={() => setShowDeleteModal(false)}
-    //                        onOK={handleDelete}
-    //                        showModal={showDeleteModal}
-    //                        cancelButtonColor={theme.muted}
-    //                        okButtonColor={theme.danger}
-    //                        message={`Delete\n\n "${post && post.title}"?`}/>
-    //     </View>
-    // );
+    return (
+        <View>
+            <ScrollView>
+                <FirebaseImage mediaId={post.image}
+                               style={{width: Metrics.screenWidth, minHeight: Metrics.screenHeight / 3.5}}/>
+                <View style={styles.insetContainer}>
+                    {showControls ? <View style={{flexDirection: 'row', marginBottom: Metrics.marginVertical}}>
+                        <Button onPress={handleEdit} containerStyle={{flex: 1, margin: 2}}
+                                icon={EDIT_ICON}/>
+                        <Button onPress={() => dispatch({type: 'SHOW_DELETE_MODAL', payload: true})}
+                                containerStyle={{flex: 1, margin: 2}}
+                                buttonStyle={{backgroundColor: theme.danger}}
+                                icon={DEL_ICON}/>
+                    </View> : null}
+                    <Text style={styles.H1}>{post.title}</Text>
+                    <Text style={styles.H3}>By {post.author}</Text>
+                    <Text style={[styles.H5, {color: theme.muted}]}>{formatScreenDates(post.published)}</Text>
+                    <Text style={[styles.normalText, {marginTop: Metrics.marginVertical * 2}]}>{post.body}</Text>
+                </View>
+            </ScrollView>
+            <OKCancelModal onCancel={() => dispatch({type: 'SHOW_DELETE_MODAL', payload: false})}
+                           onOK={handleDelete}
+                           showModal={showDeleteModal}
+                           cancelButtonColor={theme.muted}
+                           okButtonColor={theme.danger}
+                           message={`Delete\n\n "${post && post.title}"?`}/>
+
+        </View>
+    );
 };
 
 PostDetailScreen.propTypes = {};

@@ -35,9 +35,11 @@ const ListSkeleton = props => {
     );
 
     return (
-        <View style={{marginTop: 20, justifyContent: 'center'}}>
+        <View style={{marginTop: 60, justifyContent: 'center'}}>
             <SkeletonPlaceholder backgroundColor={theme.skeletonBackground} highlightColor={theme.skeletonHighlight}>
                 <View style={{width: Metrics.screenWidth*0.95, height: 50,
+                    marginBottom: Metrics.marginVertical, alignSelf: 'center'}}/>
+                <View style={{width: Metrics.screenWidth*0.95, height: 30,
                     marginBottom: Metrics.marginVertical, alignSelf: 'center'}}/>
                 {_.times(8, renderCell)}
             </SkeletonPlaceholder>
