@@ -8,17 +8,15 @@
 
  **********************************/
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import XLogger from '../../Services/XLogger';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useBlogPosts} from '../../Services/Firebase/blogposts';
 import PostCell from '../../Components/Cells/PostCell';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FlatList, View, RefreshControl, Text} from 'react-native';
 import {Input, Item} from 'native-base';
 import {useStyles} from '../../Themes/ThemeManager';
-import Metrics from '../../Themes/Metrics';
-import {Button} from 'react-native-elements';
 import postFilter from '../../Services/Filter/post-filter';
 import useFocusChangeCallbacks from '../../Hooks/useFocusChangeCallbacks';
 import NoPosts from './Components/NoPosts';
@@ -28,16 +26,25 @@ const AllPostsScreen = props => {
     const {appStyles: styles} = useStyles();
     const {posts, isLoading, loadLatestPosts} = useBlogPosts();
     const navigation = useNavigation();
+    const route = useRoute();
     const [search, setSearch] = useState('');
     const insets = useSafeAreaInsets();
     const focused = useFocusChangeCallbacks({onFocus: loadLatestPosts});
+
+    useEffect(()=>{
+        const inboundDocId = route && route.params && route.params.docId;
+        if (inboundDocId){
+            navigation.push('POST', { docId: inboundDocId});
+        }
+    }, [route]);
 
     const handleSearchChanged = t => {
         setSearch(t);
     };
 
     const renderCell = ({item}) => (<PostCell post={item} width={64} height={64}
-                                              onPress={() => navigation.push('POST', {docId: item.docId})}/>);
+                                              onPress={() => navigation.push('POST', {docId: item.docId})}
+                                                showDocId={true}/>);
 
     const postSearch = post => postFilter(post, search);
     const filteredPosts = posts.filter(postSearch);

@@ -8,7 +8,7 @@
 
  **********************************/
 
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -25,9 +25,27 @@ import BootScreen from '../Screens/Boot/BootScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 import AuthNavigator from './AuthNavigator';
 import AuthContext from '../Hooks/AuthContext';
+import {Linking, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
+
 
 const RootTabs = createBottomTabNavigator();
 const RootStack = createStackNavigator();
+
+const linking = {
+    prefixes: ['tlb://'],
+    config: {
+        MAINTABS: {
+            screens: {
+                POSTS: {
+                    screens: {
+                        POST: 'post/:docId',
+                    },
+                },
+            },
+        },
+    },
+};
 
 const Tabs = props => {
 
@@ -80,7 +98,7 @@ const Tabs = props => {
 const RootNavigator = props => {
 
     const {theme, themeMode} = useTheme();
-    const { isLoggedIn, firebaseCreds } = useContext(AuthContext);
+    const {isLoggedIn, firebaseCreds} = useContext(AuthContext);
     XLogger.logSilly(`rendering rootnav loggedIn -> ${isLoggedIn}`);
 
     const options = {
@@ -95,8 +113,7 @@ const RootNavigator = props => {
 
 
     return (
-        <NavigationContainer theme={{dark: themeMode === 'dark', colors: theme}}>
-            {/*<Tabs/>*/}
+        <NavigationContainer theme={{dark: themeMode === 'dark', colors: theme}} linking={linking}>
             <RootStack.Navigator screenOptions={options} initialRouteName={'MAINTABS'}>
                 <RootStack.Screen name="MAINTABS" component={Tabs} options={{headerShown: false}}/>
                 <RootStack.Screen name="AUTH" component={AuthNavigator}/>

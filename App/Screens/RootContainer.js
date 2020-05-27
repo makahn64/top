@@ -9,7 +9,7 @@
  **********************************/
 
 import React, {useEffect, useReducer} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Linking} from 'react-native';
 import RootNavigator from '../Navigation/RootNavigator';
 import {useTheme} from '../Themes/ThemeManager';
 import XLogger from '../Services/XLogger';

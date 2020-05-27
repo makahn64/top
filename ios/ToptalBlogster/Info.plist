@@ -30,6 +30,16 @@
 				<string>com.googleusercontent.apps.207873848038-1v482nrmru10ar0a85fcackf6eltd70h</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>toptalblogster</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tlb</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
