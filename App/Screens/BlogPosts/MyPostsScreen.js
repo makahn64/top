@@ -53,8 +53,7 @@ const MyPostsScreen = props => {
                                               onPress={() => navigation.push('MYPOST', {
                                                   docId: item.docId,
                                                   showControls: true,
-                                              })}
-                                              showEmail={false}/>);
+                                              })}/>);
 
     if (!isLoggedIn) {
         return (

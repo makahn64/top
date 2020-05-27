@@ -37,7 +37,6 @@ const AllPostsScreen = props => {
     };
 
     const renderCell = ({item}) => (<PostCell post={item} width={64} height={64}
-                                              showDocId={true}
                                               onPress={() => navigation.push('POST', {docId: item.docId})}/>);
 
     const postSearch = post => postFilter(post, search);

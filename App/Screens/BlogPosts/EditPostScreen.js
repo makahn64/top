@@ -75,6 +75,8 @@ const EditPostScreen = props => {
     const {author, authorEmail, published, title, body,
         newImage, isLoaded, showDeleteModal, modalMessage, image} = state;
 
+    navigation.setOptions({ headerTitle: (docId!=='new' ? 'Edit Post' : 'Create Post') });
+
     const loadPost = async postId => {
         try {
             const p = await getPost(postId);
@@ -140,7 +142,7 @@ const EditPostScreen = props => {
 
     };
 
-    const isValid = (title.length > 1) && (body.length > 5);
+    const isValid = (title.length > 1) && (body.length > 5) && (image || newImage);
 
     if (!isLoggedIn){
         // situation where editing and logout
@@ -162,6 +164,8 @@ const EditPostScreen = props => {
             <ScrollView>
                 <ImageAddEdit onImageChange={handleImageChange} imageName={image}/>
                 <View style={[styles.insetContainer, {backgroundColor: theme.background}]}>
+                    <Button title="SAVE" onPress={handleSave} disabled={!isValid}
+                            style={{marginBottom: Metrics.marginVertical}}/>
                     <TextInput
                         autoCapitalize="words"
                         autoComplete="none"
@@ -190,8 +194,7 @@ const EditPostScreen = props => {
                         multiline={true}
                         numberOfLines={20}
                         placeholderTextColor={theme.muted}/>
-                    <Button title="SAVE" onPress={handleSave} disabled={!isValid}
-                            style={{marginTop: Metrics.marginVertical}}/>
+
                 </View>
             </ScrollView>
             <PrettyWaitingModal showModal={!!modalMessage} message={modalMessage} showActivityIndicator={true}/>

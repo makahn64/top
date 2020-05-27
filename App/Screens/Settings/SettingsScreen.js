@@ -61,7 +61,7 @@ const SettingsScreen = props => {
                 <Button title={'LOGOUT'} onPress={handleLogout} style={{width: '50%', alignSelf:'center'}}/></View> :
             <View>
                 <Text style={[styles.H4, {color: theme.primary, marginBottom: 15, textAlign: 'center'}]}>
-                    You're not logged in. Log in or join to crate posts.
+                    You're not logged in. Log in or join to create posts.
                 </Text>
                 <Button title={'LOGIN'} onPress={handleLogin} style={{width: '50%', alignSelf:'center'}}/>
             </View>}

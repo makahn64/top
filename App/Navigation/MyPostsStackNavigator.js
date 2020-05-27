@@ -26,18 +26,19 @@ const MyPostsStackNavigator = props => {
     const options = {
         headerShown: false,
         headerStyle: {
-            backgroundColor: theme.surface,
+            backgroundColor: '#f0f0f0',
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
         },
+        headerBackTitle: null
     };
 
     return (
         <Stack.Navigator screenOptions={options} initialRouteName={'MY POSTS'}>
             <Stack.Screen name="MY POSTS" component={MyPostsScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="MYPOST" component={PostDetailScreen} options={{headerShown: true}}/>
-            <Stack.Screen name={'EDITPOST'} component={EditPostScreen} options={{headerShown: true}}/>
+            <Stack.Screen name="MYPOST" component={PostDetailScreen} options={{headerShown: true, headerTitle: ''}}/>
+            <Stack.Screen name={'EDITPOST'} component={EditPostScreen} options={{headerShown: true, headerTitle: 'Post Edit'}}/>
         </Stack.Navigator>
     );
 

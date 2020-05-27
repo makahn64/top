@@ -110,7 +110,7 @@ const ImageAddEdit = props => {
             <Icon name={'camera'} type={'material-community'} color={imageSource ? theme.danger : 'white'} size={50}
                   onPress={handleImageChange}
                   containerStyle={styles.cameraIcon}/>
-            {imageHasLoaded ? null : <Text>Loading...</Text>}
+            {/*{imageHasLoaded ? null : <Text>Loading...</Text>}*/}
         </View>
     );
 };
