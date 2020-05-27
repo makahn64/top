@@ -21,7 +21,10 @@ import auth from '@react-native-firebase/auth';
 const authReducer = (state, action) => {
     switch (action.type) {
         case 'LOGGED_IN':
-            return {firebaseCreds: action.payload, isLoggedIn: true};
+            // This info does not get updated via callback, so do it here.
+            const displayName = (auth().currentUser && auth().currentUser.displayName) || '';
+            const photoURL = (auth().currentUser && auth().currentUser.photoURL) || '';
+            return {firebaseCreds: action.payload, isLoggedIn: true, displayName, photoURL };
         case 'LOGGED_OUT':
             return INITIAL_AUTH_STATE;
         default:

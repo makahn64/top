@@ -8,20 +8,21 @@
 
  **********************************/
 
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useStyles} from '../../Themes/ThemeManager';
 import AuthContext from '../../Hooks/AuthContext';
 import Metrics from '../../Themes/Metrics';
-import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from '../../Components/Icons/UserAvatar';
 import auth from '@react-native-firebase/auth';
 import SwitchRow from '../../Components/Switches/SwitchRow';
 import {useThemeMode} from '../../Services/Storage/persisted';
-import {Button} from 'react-native-elements';
+import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/core';
 import { Toast} from 'native-base';
 import FeaturesConfig from '../../Config/FeaturesConfig';
+import useFocusChangeCallbacks from '../../Hooks/useFocusChangeCallbacks';
 
 const SettingsScreen = props => {
 
@@ -30,6 +31,26 @@ const SettingsScreen = props => {
     const {isLoggedIn, firebaseCreds} = useContext(AuthContext);
     const {themeMode, setThemeMode} = useThemeMode();
     const navigation = useNavigation();
+    const [ displayName, setDisplayName ] = useState('');
+    const [ photoURL, setPhotoURL] = useState('');
+
+
+    const reloadAuthValues = () => {
+        const currentDN = (auth().currentUser && auth().currentUser.displayName) || '';
+        const currentP = (auth().currentUser && auth().currentUser.photoURL) || '';
+        setDisplayName(currentDN);
+        setPhotoURL(currentP);
+    };
+
+    useFocusChangeCallbacks({ onFocus: reloadAuthValues, onBlur: () => {
+        // Weird state possible with auth() where old values are kept in mounted component
+        // setDisplayName('');
+        // setPhotoURL('');
+    }});
+
+    useEffect(()=>{
+        reloadAuthValues();
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -43,7 +64,9 @@ const SettingsScreen = props => {
 
     const handleLogin = () => {
         navigation.navigate('AUTH');
-    }
+    };
+
+
 
     return (
         <View style={[styles.insetContainer, {paddingTop: insets.top * 1.5}]}>
@@ -53,9 +76,10 @@ const SettingsScreen = props => {
                        onValueChange={v => setThemeMode(v ? 'dark' : 'light')}/> : null }
             {isLoggedIn ? <View>
                 <View style={{alignSelf: 'center', margin: 10}}>
-                    <UserAvatar name={firebaseCreds.displayName} src={firebaseCreds.photoURL} size={50}/>
+                    <UserAvatar displayName={displayName} photoURL={photoURL}/>
+                    <Text style={[styles.H4, {color: theme.primary, marginTop: 10, textAlign: 'center'}]}>{displayName}</Text>
                 </View>
-                <Text style={[styles.H4, {color: theme.primary, marginBottom: 15, textAlign: 'center'}]}>
+                <Text style={[styles.H4, {color: theme.muted, marginBottom: 15, textAlign: 'center'}]}>
                     {firebaseCreds.email}
                 </Text>
                 <Button title={'LOGOUT'} onPress={handleLogout} style={{width: '50%', alignSelf:'center'}}/></View> :
@@ -73,5 +97,6 @@ const SettingsScreen = props => {
 SettingsScreen.propTypes = {};
 
 export default SettingsScreen;
+
 
 

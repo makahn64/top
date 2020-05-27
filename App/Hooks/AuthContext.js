@@ -12,7 +12,7 @@
 
 import React from 'react';
 
-export const INITIAL_STATE = { firebaseCreds: null, isLoggedIn: false};
+export const INITIAL_STATE = { firebaseCreds: null, isLoggedIn: false, photoURL: '', displayName: ''};
 
 const AuthContext = React.createContext(INITIAL_STATE);
 

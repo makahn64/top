@@ -42,7 +42,6 @@
     "react-native-safe-area-context": "^1.0.2",
     "react-native-screens": "^2.8.0",
     "react-native-skeleton-placeholder": "^2.0.7",
-    "react-native-user-avatar": "^1.0.7",
     "react-native-vector-icons": "^6.6.0",
     "react-redux": "^7.2.0",
     "reactotron-react-native": "^5.0.0",
