@@ -4,6 +4,7 @@ const images = {
   logoblue: require('../Images/logoblue.png'),
   placeholderBanner: require('../Images/brokenimage.png'),
   splash: require('../Images/splash.png'),
+  thumplaceholder: require('../Images/thumbplaceholder.png'),
 };
 
 export default images;

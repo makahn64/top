@@ -25,6 +25,7 @@ import postFilter from '../../Services/Filter/post-filter';
 import {Icon} from 'react-native-elements';
 import useFocusChangeCallbacks from '../../Hooks/useFocusChangeCallbacks';
 import NoPosts from './Components/NoPosts';
+import ListSkeleton from '../../Components/Skeletons/ListSkeleton';
 
 const MyPostsScreen = props => {
 
@@ -48,6 +49,10 @@ const MyPostsScreen = props => {
 
     // const venueSearch = venue => fullVenueFilter(venue, search);
     // const filteredVenues = venues.filter(venueSearch);
+
+    if (isLoading && isLoggedIn){
+        return <ListSkeleton/>
+    }
 
     const renderCell = ({item}) => (<PostCell post={item} width={64} height={64}
                                               onPress={() => navigation.push('MYPOST', {

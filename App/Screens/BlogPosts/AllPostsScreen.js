@@ -20,6 +20,7 @@ import {useStyles} from '../../Themes/ThemeManager';
 import postFilter from '../../Services/Filter/post-filter';
 import useFocusChangeCallbacks from '../../Hooks/useFocusChangeCallbacks';
 import NoPosts from './Components/NoPosts';
+import ListSkeleton from '../../Components/Skeletons/ListSkeleton';
 
 const AllPostsScreen = props => {
 
@@ -50,6 +51,10 @@ const AllPostsScreen = props => {
     const filteredPosts = posts.filter(postSearch);
 
     const hasContent = posts && posts.length;
+
+    if (isLoading){
+        return <ListSkeleton/>
+    }
 
     return (
         <View style={[styles.insetContainer, {paddingTop: insets.top * 1.25}]}>

@@ -52,9 +52,10 @@ const FirebaseImage = props => {
 
     return (
         <Image
-            style={[style, { borderWidth: loaded ? 0 : 10, borderColor: '#e1e1e1'}]}
+            style={[style, { borderWidth: loaded ? 0 : 2, borderColor: '#e1e1e1'}]}
             source={downloadUrl}
             onLoad={handleImageLoaded}
+            loadingIndicatorSource={Images.thumplaceholder}
         onError={handleImageError}/>
     );
 };

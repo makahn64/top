@@ -19,6 +19,17 @@ Write a simple Blogging application using React Native:
 - Write unit and e2e tests for bonus points.
 
 
+## Deep Linking
+The project only uses URL scheme linking as opposed to Universal linking. I would normally do Universal, but it requires
+setting up a back-end to handle such links on the web.
+
+The URL Scheme prefix is `tlb://`.
+
+To test the deep link from the command line:
+
+`xcrun simctl openurl booted tlb://post/[postId]`
+     
+
 ## Support on Various iOS Devices
 
 ### iPhone 4 through iPhone 11
