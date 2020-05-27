@@ -10,7 +10,6 @@
 
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import CreateAccountScreen from '../Screens/AuthAndSignup/CreateAccountScreen';
 import ForgotPasswordScreen from '../Screens/AuthAndSignup/ForgotPasswordScreen';
 import LoginScreen from '../Screens/AuthAndSignup/LoginScreen';
 import SignupNameEmailScreen from '../Screens/AuthAndSignup/SignupNameEmailScreen';
@@ -58,7 +57,6 @@ const AuthNavigator = props => {
         <AuthStack.Navigator screenOptions={screenOptions}>
             <AuthStack.Screen name={'LoginScreen'} component={LoginScreen} options={landingOptions}/>
             <AuthStack.Screen name={'ForgotPasswordScreen'} component={ForgotPasswordScreen} options={{headerTitle: null}}/>
-            <AuthStack.Screen name={'CreateAccountScreen'} component={CreateAccountScreen} options={{headerTitle: null}}/>
             <AuthStack.Screen name={'SignupNameEmailScreen'} component={SignupNameEmailScreen} options={{headerTitle: null}}/>
         </AuthStack.Navigator>
     );
